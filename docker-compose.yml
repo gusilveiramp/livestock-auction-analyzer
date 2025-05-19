@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - backend
+
+  analista:
+    build: .
+    ports:
+      - "3333:3333"
+    volumes:
+      - ./frames:/app/frames
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+    command: ["npm", "run", "start"]
+    networks:
+      - backend
+
+  analista-worker:
+    build: .
+    volumes:
+      - ./frames:/app/frames
+    environment:
+      - NODE_ENV=development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+      - ocr-service # Necessário porque o worker faz chamadas HTTP ao OCR
+    restart: unless-stopped
+    command: ["node", "src/jobs/ocrWorker.js"]
+    networks:
+      - backend
+
+  ocr-service:
+    build:
+      context: ./ocr-service
+    expose:
+      - "8000" # NÃO use 'ports', use 'expose' para manter privado. Expõe internamente, mas não para fora do host
+    restart: unless-stopped
+    networks:
+      - backend
+
+  asr-service:
+    build:
+      context: ./asr-service
+    expose:
+      - "8000"
+    restart: unless-stopped
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
