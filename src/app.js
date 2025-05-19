@@ -23,6 +23,8 @@ app.post("/start", async (req, res) => {
   }
 });
 
+// Não vamos usar Tesseract. Vou manter essa rota por enquanto apenas para teste
+// Quero criar um teste comparativo entre Tesseract e o EasyOCR
 app.get("/test-ocr-tesseract", async (req, res) => {
   try {
     const imagePath = path.join(

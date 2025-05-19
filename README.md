@@ -43,28 +43,71 @@ This system is compatible with:
 
 ## 🧱 Architecture Overview
 
+```
+# Node.js API
 src/
-├── app.js # Main Express API
-├── routes/ # HTTP route handlers
-│ ├── video.routes.js # Start OCR pipeline
-│ ├── audio.routes.js # Start ASR pipeline
-│ ├── job.routes.js # Track job status / results
-│ └── routes.js # Route registration
-├── services/
-│ ├── processVideo.js # Extract frames, call OCR microservice
-│ └── asrProcessor.js # Extract audio, get transcription
-├── queues/
-│ ├── index.js # Registers OCR + ASR queues
-│ ├── ocrQueue.js # OCR job dispatcher
-│ ├── asrQueue.js # ASR job dispatcher
-│ └── jobs/
-│ ├── index.js # Generic worker bootstrap
-│ └── workers/
-│ ├── ocrWorker.js
-│ └── asrWorker.js
-├── config/
-│ └── redisClient.js # Redis BullMQ client
-└── frames/ # Output of processed frames (shared volume)
+  │
+  ├── app.js # Main Express API
+  │
+  ├── socket.js # Socket.io + BullMQ QueueEvents
+  │
+  ├── server.js # HTTP server bootstrap
+  │
+  ├── routes/ # HTTP route handlers (TODO)
+  │   │
+  │   ├── video.routes.js # Start OCR pipeline (TODO)
+  │   │
+  │   ├── audio.routes.js # Start ASR pipeline (TODO)
+  │   │
+  │   ├── job.routes.js # Track job status / results (TODO)
+  │   │
+  │   └── routes.js # Route registration (TODO)
+  │
+  ├── services/
+  │   │
+  │   ├── videoProcessor.js # Extract frames, call OCR microservice
+  │   │
+  │   └── audioProcessor.js # Extract audio, get transcription
+  │
+  ├── queues/
+  │   │
+  │   ├── index.js # Registers OCR + ASR queues
+  │   │
+  │   └── jobs/
+  │       │
+  │       ├── index.js # Generic worker bootstrap
+  │       │
+  │       └── workers/
+  │           │
+  │           ├── ocrWorker.js # Video processor worker
+  │           │
+  │           └── asrWorker.js # Audio processor worker
+  │
+  └── config/
+      │
+      ├── env.js # Enviroment variables
+      │
+      └── redisClient.js # Redis BullMQ client
+
+# Python EasyOCR microservices
+ocr-services
+│
+└── app/
+    │
+    ├── main.py # FastAPI entrypoint
+    │
+    └── Dockerfile # Builds OCR microservice image
+
+# Python ASR microservices
+asr-services
+│
+└── app/
+    │
+    ├── main.py # FastAPI entrypoint
+    │
+    └── Dockerfile # Builds OCR microservice image
+
+```
 
 ---
 
