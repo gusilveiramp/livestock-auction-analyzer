@@ -1,5 +1,5 @@
-const { transcribeAudio } = require("../../../services/audioProcessor");
-const { createWorker } = require("../index");
+const { transcribeAudio } = require("../../services/audioProcessor");
+const { createWorker } = require("../jobs/index");
 
 const worker = createWorker("asr-processing", async (job) => {
   console.log(`🖼️ Iniciando ASR para job ${job.id}...`);

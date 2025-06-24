@@ -1,5 +1,5 @@
-const { captureFrame } = require("../../../services/videoProcessor");
-const { createWorker } = require("../index");
+const { captureFrame } = require("../../services/videoProcessor");
+const { createWorker } = require("./index");
 
 const worker = createWorker("ocr-processing", async (job) => {
   console.log(`🖼️ Iniciando OCR para job ${job.id}...`);
